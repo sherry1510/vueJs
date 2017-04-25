@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>异步更新队列</title>
+    <script src="todo/vue.js"></script>
+</head>
+<body>
+<div id="app">
+    {{message}}
+</div>
+<script>
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            message: '123'
+        }
+    });
+    vm.message = 'abc';
+    console.log(vm.$el.textContent); //123
+    Vue.nextTick(function(){
+        console.log(vm.$el.textContent); //abc
+    })
+</script>
+</body>
+</html>

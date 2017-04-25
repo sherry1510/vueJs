@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>实现简单的分页</title>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="vue.js"></script>
+    <style type="text/css">
+        .page-bar {
+            margin: 40px;
+        }
+
+        ul, li {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        li {
+            list-style: none
+        }
+
+        .page-bar li:first-child > a {
+            margin-left: 0px
+        }
+
+        .page-bar a {
+            border: 1px solid #ddd;
+            text-decoration: none;
+            position: relative;
+            float: left;
+            padding: 6px 12px;
+            margin-left: -1px;
+            line-height: 1.42857143;
+            color: #337ab7;
+            cursor: pointer
+        }
+
+        .page-bar a:hover {
+            background-color: #eee;
+        }
+
+        .page-bar a.banclick {
+            cursor: not-allowed;
+        }
+
+        .page-bar .active a {
+            color: #fff;
+            cursor: default;
+            background-color: #337ab7;
+            border-color: #337ab7;
+        }
+
+        .page-bar i {
+            font-style: normal;
+            color: #d44950;
+            margin: 0px 4px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+<div class="page-bar" id="page-bar">
+    <table class="table table-hover table-bordered">
+        <thead>
+        <tr>
+            <th width="10%">id</th>
+            <th width="30%">name</th>
+            <th width="40%">content</th>
+            <th width="20%">remark</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="data in perList">
+            <td v-text="data.num"></td>
+            <td v-text="data.author"></td>
+            <td v-text="data.contents"></td>
+            <td v-text="data.remark"></td>
+        </tr>
+        </tbody>
+    </table>
+    <ul>
+        <li v-if="curPage>1" @click="curPage--;"><a>上一页</a></li>
+        <li v-else><a class="banclick">上一页</a></li>
+        <li v-for="pageNum in curPages" v-bind:class="{'active':pageNum==curPage}">
+            <a @click="clickBtn(pageNum)">{{pageNum}}</a>
+        </li>
+        <li v-if="curPage<all" @click="curPage++;"><a>下一页</a></li>
+        <li v-else><a class="banclick">下一页</a></li>
+        <li><a>共<i>{{all}}</i>页</a></li>
+    </ul>
+</div>
+
+<script>
+    var pageBar = new Vue({
+        el: '#page-bar',
+        data: {
+            tableList: [
+                {num: 1, author: 'luozh', contents: 'BootPage是一款支持静态数据和服务器数据的表格分页组件', remark: 'dsds'},
+                {num: 2, author: 'luozh', contents: '支持调整每页显示行数和页码显示个数，样式基于bootstrap', remark: 'dsds'},
+                {num: 3, author: 'luozh', contents: '<boot-page>标签中async指是否从服务器端获取数据，false为否', remark: 'dsds'},
+                {num: 4, author: 'luozh', contents: 'data为静态的表格数据数组；', remark: 'dsds'},
+                {num: 5, author: 'luozh', contents: 'lens为每页显示行数的数组', remark: 'dsds'},
+                {num: 6, author: 'luozh', contents: 'page-len为可显示的页码数', remark: 'dsds'},
+                {
+                    num: 7,
+                    author: 'luozh',
+                    contents: '服务器回传参数为{data:[], page_num: 6}, 其中data为表格数据，page_num为总页数',
+                    remark: 'dsds'
+                },
+                {num: 8, author: 'luozh', contents: '可以调用this.$refs.page.refresh()刷新表格数据', remark: 'dsds'},
+                {num: 1, author: 'luozh', contents: 'BootPage是一款支持静态数据和服务器数据的表格分页组件', remark: 'dsds'},
+                {num: 2, author: 'luozh', contents: '支持调整每页显示行数和页码显示个数，样式基于bootstrap', remark: 'dsds'},
+                {num: 3, author: 'luozh', contents: '<boot-page>标签中async指是否从服务器端获取数据，false为否', remark: 'dsds'}
+            ],
+            // all: 10,  //总页数
+            curPage: 1,//当前页码
+            perNum: 3 //每页显示的条数
+        },
+        computed: {
+            curPages: function () {
+                var left = 1;
+                var right = this.all;
+                var arr = [];
+                if (this.all >= 5) {
+                    if (this.curPage > 3 && this.curPage < this.all - 2) {
+                        left = this.curPage - 2;
+                        right = this.curPage + 2;
+                    } else {
+                        if (this.curPage <= 3) {
+                            left = 1;
+                            right = 5;
+                        } else {
+                            right = this.all;
+                            left = this.all - 4;
+                        }
+                    }
+                }
+                while (left <= right) {
+                    arr.push(left);
+                    left++;
+                }
+                return arr;
+            },
+            perList: function () {
+                var arrList = [];
+                var start = Math.max(0, (this.curPage - 1) * this.perNum);
+                var end = Math.min(start + this.perNum, this.tableList.length);
+
+                for (var i = start; i < end; i++) {
+                    arrList.push(this.tableList[i]);
+                }
+                console.log(arrList);
+                return arrList;
+            },
+            all: function () {
+                return Math.ceil(this.tableList.length / this.perNum);
+            }
+        },
+        methods: {
+            clickBtn: function (pageNum) {
+                if (pageNum == this.curPage)return;
+                this.curPage = pageNum;
+            }
+        }
+    });
+</script>
+</body>
+</html>

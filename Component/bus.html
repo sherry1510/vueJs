@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>非父子组件通信</title>
+    <script src="../vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <foo></foo>
+    <hr/>
+    <bar></bar>
+</div>
+<script>
+    /*
+     非父子组件之间的通信：在简单的场景下,可以使用一个空的 Vue 实例作为中央事件总线
+     * */
+
+    // 注册一个空的 Vue 实例，作为 ‘中转站’
+    var eventBus = new Vue({});
+
+    Vue.component('foo', {
+        data(){
+            return {
+                fooCount: 0
+            }
+        },
+        template: `
+           <div>
+            <p>the count of foo is {{fooCount}}</p>
+            <button @click="changeBarCount">add bar's count</button>
+           </div>
+       `,
+        methods: {
+            changeBarCount(){
+                eventBus.$emit('changeBarCount');
+            }
+        },
+        mounted: function () {
+            eventBus.$on('changeFooCount', function (num) {
+                this.fooCount += num;
+            }.bind(this))
+        }
+    });
+    Vue.component('bar', {
+        data(){
+            return {
+                barCount: 0
+            }
+        },
+        template: `
+           <div>
+            <p>the count of bar is {{barCount}}</p>
+            <button @click="changeFooCount">add foo's count</button>
+           </div>
+       `,
+        methods: {
+            changeFooCount(){
+                //触发事件，并传递参数
+                eventBus.$emit('changeFooCount', 2);
+            }
+        },
+        mounted: function () {
+            eventBus.$on('changeBarCount', function () {
+                this.barCount++;
+            }.bind(this))
+        }
+    });
+    new Vue({
+        el: '#app'
+
+    });
+</script>
+</body>
+</html>

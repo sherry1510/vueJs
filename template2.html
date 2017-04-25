@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>template字符串模板</title>
+    <script src="todo/vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <span>你好</span>
+    <span>呵呵</span>
+    <span>哒</span>
+</div>
+<!--使用x-template ,
+缺点：不能跨文件使用
+-->
+<script type="x-template" id="temp">
+    <div>
+        hello!
+        <span>aaa</span>
+    </div>
+</script>
+<script>
+    let obj = {
+        html: '<div>hello!</div>',
+        abc: '1'
+    };
+    new Vue({
+        el: '#app',
+        data: obj,
+        template: '#temp'  //模板将会替换挂载的元素。挂载元素的内容都将被忽略
+    });
+
+</script>
+</body>
+</html>

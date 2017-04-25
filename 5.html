@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>异步更新队列</title>
+    <script src="todo/vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <example></example>
+</div>
+<script>
+    Vue.component('example', {
+        template: '<span @click="updateMessage">{{message}}</span>',
+        data: function () {
+            return {
+                message: 'not updated'
+            }
+        },
+        methods: {
+            updateMessage: function () {
+                this.message = 'updated';
+                console.log(this.$el.textContent);
+                this.$nextTick(function () {
+                    console.log(this.$el.textContent);
+                })
+            }
+        }
+    });
+    var vm = new Vue({
+        el: '#app'
+    });
+</script>
+</body>
+</html>

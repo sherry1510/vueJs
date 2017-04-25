@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>响应式原理</title>
+    <script src="vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <p>{{a}}</p>
+</div>
+<script>
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            a: 1,  //响应式
+            obj:{}
+        }
+    });
+    //vm.b = 2; //非响应式
+
+    //以使用 Vue.set(object, key, value) 方法将响应属性添加到嵌套的对象上，如下：
+    //Vue.set(vm.obj, 'b', 2);
+    //vm.obj = Object.assign({}, vm.obj, { a: 1, b: 2 })
+</script>
+</body>
+</html>

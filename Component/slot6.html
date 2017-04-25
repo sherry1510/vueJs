@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <customer>
+        <div slot="one">替换第1个提醒</div>
+        <div slot="three">替换第3个提醒</div>
+        <template slot="two">
+            <div>替换第2个提醒</div>
+            <div>替换第2个提醒</div>
+            <div>替换第2个提醒</div>
+            <div>替换第2个提醒</div>
+            <div>替换第2个提醒</div>
+        </template>
+
+    </customer>
+</div>
+<script>
+    /*
+     * 使用slot分发内容，具名slot
+     * */
+    Vue.component('customer', {
+        template: `
+            <div>
+                <slot name="one"><p>第1个提醒</p></slot>
+                <slot name="two"><p>第2个提醒</p></slot>
+                <slot name="three"><p>第3个提醒</p></slot>
+            </div>
+        `
+    });
+    new Vue({
+        el: '#app'
+    })
+</script>
+</body>
+</html>

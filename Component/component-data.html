@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../vue.js"></script>
+</head>
+<body>
+<div id="btns">
+    <simple-counter></simple-counter>
+    <simple-counter></simple-counter>
+    <simple-counter></simple-counter>
+</div>
+<script>
+    var data = {
+        counter: 0
+    };
+    //全局注册组件
+    Vue.component('simple-counter', {
+        template: '<button @click="counter++;">{{counter}}</button>',
+        /* data: function () {
+         //此时，为每一个组件返回了同一个对象引用，改变一个，所有的组件都会跟着变化
+         return data;
+         }*/
+        data: function () {
+            return {
+                //为每个组件都返回了一个对象
+                counter: 0
+            }
+        }
+    });
+    new Vue({
+        el: '#btns'
+    });
+    /*
+     * 注意：一定要先注册组件，然后再创建实例
+     * */
+</script>
+</body>
+</html>

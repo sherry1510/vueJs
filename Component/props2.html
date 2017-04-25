@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <input type="text" v-model="parentMsg"/>
+    <br/>
+    <!--使用v-bind动态绑定props-->
+    <!--此处必须使用‘-’连接的命名方式-->
+    <child :child-msg="parentMsg"></child>
+</div>
+<script>
+    /*
+     动态props
+     * */
+    Vue.component('child', {
+        props:['childMsg'], //此处必须使用驼峰式的命名
+        template: '<span>{{childMsg}}</span>'
+    });
+    new Vue({
+        el: '#app',
+        data: {
+            parentMsg: 'aaa'
+        }
+    })
+</script>
+</body>
+</html>

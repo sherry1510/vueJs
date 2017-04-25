@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>directive</title>
+    <script src="vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <!--<div v-color-swatch="color">aaaa</div>-->
+    <div v-demo="{color:'green',text: 'hello!'}"></div>
+</div>
+<script>
+    /* Vue.directive('color-swatch', function (el, binding) {
+     console.log(binding);
+     el.style.backgroundColor = binding.value;
+     });*/
+    Vue.directive('demo', function (el, binding) {
+        console.log(binding.value.color);
+        console.log(binding.value.text);
+    });
+    var app = new Vue({
+        el: '#app',
+        data: {
+            color: 'red'
+        }
+    });
+
+</script>
+</body>
+</html>

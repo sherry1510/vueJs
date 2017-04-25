@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-default/index.css">
+    <!-- 先引入 Vue -->
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <!-- 引入组件库 -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+</head>
+<body>
+<div id="app">
+    <table class="table table-hover table-bordered">
+        <thead>
+        <tr>
+            <th width="10%">id</th>
+            <th width="30%">name</th>
+            <th width="40%">content</th>
+            <th width="20%">remark</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="data in perList">
+            <td v-text="data.num"></td>
+            <td v-text="data.author"></td>
+            <td v-text="data.contents"></td>
+            <td v-text="data.remark"></td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="block">
+        <!-- <span class="demonstration">页数较少时的效果</span>
+         <el-pagination
+                 layout="prev, pager, next"
+                 :total="all" :page-size="perNum" @current-change="clickBtn">
+         </el-pagination>-->
+        <span class="demonstration">调整每页显示条数</span>
+        <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="clickBtn"
+                :current-page="curPage"
+                :page-sizes="[10, 20, 50, 100]"
+                :page-size="perNum"
+                layout="sizes, prev, pager, next"
+                :total="all">
+        </el-pagination>
+    </div>
+</div>
+</body>
+
+<script>
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            tableList: [
+                {num: 1, author: 'luozh', contents: 'BootPage是一款支持静态数据和服务器数据的表格分页组件', remark: 'dsds'},
+                {num: 2, author: 'luozh', contents: '支持调整每页显示行数和页码显示个数，样式基于bootstrap', remark: 'dsds'},
+                {num: 3, author: 'luozh', contents: '<boot-page>标签中async指是否从服务器端获取数据，false为否', remark: 'dsds'},
+                {num: 4, author: 'luozh', contents: 'data为静态的表格数据数组；', remark: 'dsds'},
+                {num: 5, author: 'luozh', contents: 'lens为每页显示行数的数组', remark: 'dsds'},
+                {num: 6, author: 'luozh', contents: 'page-len为可显示的页码数', remark: 'dsds'},
+                {
+                    num: 7,
+                    author: 'luozh',
+                    contents: '服务器回传参数为{data:[], page_num: 6}, 其中data为表格数据，page_num为总页数',
+                    remark: 'dsds'
+                },
+                {num: 8, author: 'luozh', contents: '可以调用this.$refs.page.refresh()刷新表格数据', remark: 'dsds'},
+                {num: 9, author: 'luozh', contents: 'BootPage是一款支持静态数据和服务器数据的表格分页组件', remark: 'dsds'},
+                {num: 10, author: 'luozh', contents: '支持调整每页显示行数和页码显示个数，样式基于bootstrap', remark: 'dsds'},
+                {num: 11, author: 'luozh', contents: '<boot-page>标签中async指是否从服务器端获取数据，false为否', remark: 'dsds'}
+            ],
+            curPage: 1,//当前页码
+            perNum: 10 //每页显示的条数
+        },
+        computed: {
+            perList: function () {
+                var arrList = [];
+                var start = Math.max(0, (this.curPage - 1) * this.perNum);
+                var end = Math.min(start + this.perNum, this.tableList.length);
+
+                for (var i = start; i < end; i++) {
+                    arrList.push(this.tableList[i]);
+                }
+                //console.log(arrList);
+                return arrList;
+            },
+            all: function () {
+                return this.tableList.length;
+            }
+        },
+        methods: {
+            handleSizeChange: function (val) {
+                //console.log(val);
+                this.perNum = val;
+            },
+            clickBtn: function (val) {
+                //console.log(val);
+                this.curPage = val;
+            }
+        }
+
+    });
+</script>
+</html>

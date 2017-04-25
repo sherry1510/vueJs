@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <customer>
+        <!--<div>我是html结构</div>-->
+    </customer>
+</div>
+<script>
+    /*
+     * 使用slot分发内容，单个slot
+     * */
+    Vue.component('customer', {
+        template: `
+            <div>
+                <slot>我是默认的结构</slot>
+                <slot>
+                    <p>第1个p标签</p>
+                    <p>第2个p标签</p>
+                    <p>第3个p标签</p>
+                </slot>
+            </div>
+        `
+    });
+    new Vue({
+        el: '#app'
+    })
+</script>
+</body>
+</html>

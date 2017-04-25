@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <h2>我是父级的count：{{count}}</h2>
+    <customer-component :count="count" @parent-count="changeParent"></customer-component>
+</div>
+<script>
+    /*单向数据流*/
+    /*自定义事件*/
+    Vue.component('customer-component', {
+        props: ['count'],
+        data: function () {
+            return {
+                increment: this.count
+            }
+        },
+        template: `
+            <div>
+                <h2>我是一个自定义组件</h2>
+                <input type="button" value="改变count的值" @click="changeCount" />
+                {{increment}}
+            </div>
+        `,
+        methods: {
+            changeCount(){
+                /*
+                 this.count++; //不能直接这样改变count，会报错。应该将数据放在组件的data里面
+                 */
+                this.increment++;
+                this.$emit('parent-count');
+            }
+        }
+    });
+    new Vue({
+        el: '#app',
+        data: {
+            count: 0
+        },
+        methods: {
+            changeParent(){
+                this.count++;
+            }
+        }
+    })
+</script>
+</body>
+</html>

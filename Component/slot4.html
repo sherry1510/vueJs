@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <div class="parent">
+        <child>
+            <template scope="props">
+                <span>hello from parent</span>
+                <span>{{ props.text }}</span>
+            </template>
+        </child>
+    </div>
+</div>
+<script>
+    /*
+     作用域插槽
+     作用域插槽是一种特殊类型的插槽，用作使用一个（能够传递数据到）可重用模板替换已渲染元素。
+     * */
+    Vue.component('child', {
+        template:`
+                <div class="child">
+                    <slot text="hello from child"></slot>
+                </div>
+        `
+    });
+    new Vue({
+        el: '#app'
+    })
+</script>
+</body>
+</html>

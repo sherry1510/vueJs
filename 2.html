@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>计算属性实现过滤</title>
+    <script src="vue.js"></script>
+</head>
+<body>
+<div class="app">
+    <input type="text" v-model="name">
+    <ul>
+        <li v-for="user in newUsers" >
+            {{ user.name }}
+        </li>
+    </ul>
+</div>
+<script>
+    new Vue({
+        el: '.app',
+        data: {
+            name: '',
+            users: [
+                { name: 'Bruce' },
+                { name: 'Chuck' },
+                { name: 'Jackie' },
+                { name: '赵' }
+            ]
+        },
+        computed: {
+            newUsers: function () {
+                var that = this;
+                return that.users.filter(function (user) {
+                    return user.name.toLowerCase().indexOf(that.name.toLowerCase()) !== -1;
+                })
+            }
+
+        }
+    })
+</script>
+</body>
+</html>

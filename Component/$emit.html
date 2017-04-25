@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <p>{{total}}</p>
+    <button-counter v-on:aaa="incrementTotal"></button-counter>
+    <button-counter v-on:aaa="incrementTotal"></button-counter>
+</div>
+<script>
+    /*
+     子组件通过自定义事件向父组件传递数据
+     使用 $on(eventName) 监听事件
+     使用 $emit(eventName) 触发事件
+     * */
+    Vue.component('button-counter', {
+        template: '<button @click="increment">{{counter}}</button>',
+        data: function () {
+            return {
+                counter: 0
+            }
+        },
+        methods: {
+            increment: function () {
+                this.counter++;
+                this.$emit('aaa'); //触发父组件的事件
+            }
+        }
+    });
+    new Vue({
+        el: '#app',
+        data: {
+            total: 0
+        },
+        methods: {
+            incrementTotal: function () {
+                this.total++;
+            }
+        }
+    })
+</script>
+</body>
+</html>

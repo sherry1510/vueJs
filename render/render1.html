@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>render函数</title>
+    <script src="../todo/vue.js"></script>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+
+    new Vue({
+        el: '#app',
+        render(createElement){
+            return createElement(
+                    'ul',
+                    {
+                        'class': {
+                            'foo': true,
+                            'bar': false
+                        }, //为对象
+                        'style': {
+                            color: 'red',
+                            fontSize: '24px'
+                        }
+                    },
+                    [
+                        createElement('li', 1),
+                        createElement('li', 2),
+                        createElement('li', 3)
+                    ]
+            )
+        }
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <h2>我是父级的count：{{count}}</h2>
+    <customer-component :count="count" @parent-count="changeParent"></customer-component>
+</div>
+<script>
+    /*
+     * props验证
+     * */
+    Vue.component('customer-component', {
+        props: {
+            count: {
+                //type: Number,  //父组件传过来的count的值必须为Number类型的，否则报错
+                type: [String, Number],  //type可以为多种的类型，用数组表示
+                //default:10    //如果count没有传值过来，默认为10
+                // required: true  //count必须传值过来
+                //自定义验证
+                validator: function (value) {
+                    return value > 10;  //count值必须大于10
+                }
+            }
+        },
+        data: function () {
+            return {
+                increment: this.count
+            }
+        },
+        template: `
+            <div>
+                <h2>我是一个自定义组件</h2>
+                <input type="button" value="改变count的值" @click="changeCount" />
+                {{increment}}
+            </div>
+        `,
+        methods: {
+            changeCount(){
+                this.increment++;
+                this.$emit('parent-count');
+            }
+        }
+    });
+    new Vue({
+        el: '#app',
+        data: {
+            count: 0
+        },
+        methods: {
+            changeParent(){
+                this.count++;
+            }
+        }
+    });
+</script>
+</body>
+</html>

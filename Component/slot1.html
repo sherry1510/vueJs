@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <child-component></child-component>
+</div>
+<script>
+    /*
+     编译作用域
+     父组件模板的内容在父组件作用域内编译；子组件模板的内容在子组件作用域内编译。
+     * */
+    Vue.component('child-component', {
+        template: '<div v-show="someChildProperty">Child</div>',
+        data: function () {
+            return {
+                someChildProperty: true
+            }
+        }
+    });
+    new Vue({
+        el: '#app'
+    })
+</script>
+</body>
+</html>

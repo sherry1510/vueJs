@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>template字符串模板</title>
+    <script src="todo/vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <span>你好</span>
+    <span>呵呵</span>
+    <span>哒</span>
+</div>
+<script>
+    let obj = {
+        html: '<div>hello!</div>',
+        abc: '1'
+    };
+    let str = '<div>hello!<span>aaa</span></div>'; //根节点只能有一个
+    new Vue({
+        el: '#app',
+        data: obj,
+        template: str  //模板将会替换挂载的元素。挂载元素的内容都将被忽略
+    });
+
+</script>
+</body>
+</html>

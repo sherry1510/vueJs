@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>仿select</title>
+    <link rel="stylesheet" type="text/css" href="./style.css">
+    <script src="../../vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <h2>自定义下拉框</h2>
+    <customer-select btn-value="搜索" :list="list1"></customer-select>
+    <h2>自定义下拉框1</h2>
+    <customer-select btn-value="查询" :list="list2"></customer-select>
+</div>
+
+
+<script>
+    Vue.component('customer-select', {
+        props: ['btnValue', 'list'],
+        data: function () {
+            return {
+                isShow: false,
+                val: ''
+            }
+        },
+        template: `
+            <section class="warp">
+                <div class="searchIpt clearFix">
+                    <div class="clearFix">
+                        <input type="text" class="keyWord" :value="val" @click="isShow=!isShow"/>
+                        <input type="button" :value="btnValue">
+                        <span></span>
+                    </div>
+                        <customer-list v-show="isShow" :list="list" @parent="changeValue"></customer-list>
+                </div>
+            </section>
+        `,
+        methods: {
+            changeValue(value){
+                this.val = value;
+                this.isShow = false;
+            }
+        }
+    });
+    Vue.component('customer-list', {
+        data(){
+            return {
+                index0: 0
+            }
+        },
+        props: ['list'],
+        template: `<ul class="list">
+                        <li v-for="(item,index) in list" :class="{'active':index0===index}" @click="selectValue(item,index)">{{item}}</li>
+                   </ul>`,
+        methods: {
+            selectValue(item, index){
+                this.index0 = index;
+                this.$emit('parent', item);
+            }
+        }
+    });
+    new Vue({
+        el: '#app',
+        data: {
+            list1: ["北京", "上海", "杭州","杭州"],
+            list2: ["17-02-17", "17-02-18", "17-02-19"]
+        }
+    })
+</script>
+</body>
+</html>

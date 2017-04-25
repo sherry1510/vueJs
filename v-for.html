@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>过滤器</title>
+    <script src="vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <!-- <ul v-for="(value,key) in object">
+         <li>{{key}}:{{value}}</li>
+     </ul>-->
+    <ul v-for="(value,key,index) in object">
+        <li>{{index}}. {{key}}:{{value}}</li>
+    </ul>
+</div>
+<script>
+
+    var app = new Vue({
+        el: '#app',
+        data: {
+            object: {
+                FirstName: 'John',
+                LastName: 'Doe',
+                Age: 30
+            }
+        }
+    });
+</script>
+</body>
+</html>

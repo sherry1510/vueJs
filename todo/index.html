@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>todos</title>
+    <link rel="stylesheet" type="text/css" href="css/base.css">
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+    <style>
+        [v-cloak] {
+            display: none !important;
+        }
+
+        .noList {
+            padding: 15px 60px 15px 15px;
+            font-size: 24px;
+            text-align: center;
+        }
+    </style>
+    <script src="vue.js"></script>
+</head>
+<body>
+<section class="todoapp">
+    <header class="header">
+        <h1>todos</h1>
+        <input class="new-todo" placeholder="What needs to be done?" v-model="newTodo" @keyup.enter="addTodo">
+    </header>
+    <section class="main">
+        <input class="toggle-all" type="checkbox">
+        <div class="noList" v-show="!list.length">还没有没有任务</div>
+        <ul class="todo-list">
+            <li v-for="(item,index) in filterList" :class="{'completed':item.checked,'editing':editedTodo===item}">
+                <div class="view">
+                    <input class="toggle" type="checkbox" v-model="item.checked">
+                    <label v-cloak @dblclick="editorTodo(item)">{{item.title}}</label>
+                    <button class="destroy" @click="removeTodo(item)"></button>
+                </div>
+                <input class="edit"
+                       v-model="item.title"
+                       v-focus="editedTodo===item"
+                       @keyup.enter="doneTodo(item)"
+                       @blur="doneTodo(item)"
+                       @keyup.esc="cancelTodo(item)"
+                />
+            </li>
+        </ul>
+    </section>
+    <footer class="footer">
+	    <span class="todo-count">
+	    	<strong v-cloak>{{noselect.length}}</strong>
+	    	<span>条未选中</span>
+	    </span>
+        <ul class="filters">
+            <li><a href="#all" :class="{selected: visibility=='all'}">All</a></li>
+            <li><a href="#active" :class="{selected: visibility=='active'}">Active</a></li>
+            <li><a href="#completed" :class="{selected: visibility=='completed'}">Completed</a></li>
+        </ul>
+        <button class="clear-completed" @click="clearComplete()" v-show="list.length>noselect.length">
+            Clear completed
+        </button>
+    </footer>
+</section>
+<footer class="info">
+    <p>Double-click to edit a todo</p>
+    <p>Written by <a href="http://evanyou.me">Evan You</a></p>
+    <p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
+</footer>
+<script>
+    var todoStorage = {
+        save: function (key, todos) {
+            localStorage.setItem(key, JSON.stringify(todos));
+        },
+        fetch: function (key) {
+            return JSON.parse(localStorage.getItem(key)) || [];
+        }
+    };
+    var list = todoStorage.fetch('todos');
+    /*var list = [
+     {
+     title: '吃饭睡觉',
+     checked: true
+     },
+     {
+     title: 'vue学习',
+     checked: false
+     }
+     ];*/
+    var filter = {
+        all: function (list) {
+            return list;
+        },
+        active: function (list) {
+            return list.filter(function (item) {
+                return !item.checked;
+            })
+        },
+        completed: function (list) {
+            return list.filter(function (item) {
+                return item.checked;
+            })
+        }
+    };
+    var app = new Vue({
+        el: '.todoapp',
+        data: {
+            list: list,
+            newTodo: '',
+            editedTodo: null,
+            beforeTodo: '',
+            visibility: 'all'
+        },
+        computed: {
+            noselect(){
+                return this.list.filter(function (item) {
+                    return !item.checked;
+                })
+            },
+            filterList(){ //过滤数据
+                return filter[this.visibility](this.list);
+            }
+        },
+        watch: {
+            /*list: function () { //监控list属性，当list对应的值发生变化，就会执行此函数（此用法只是浅监控，只能监测到list的一层数据，不能监测到里面的数据变化）
+             todoStorage.save('todos', list);
+             }*/
+            list: { //深层监控,可以监控到list里面的对象的属性的变化
+                handler: function () {
+                    todoStorage.save('todos', list);
+                },
+                deep: true
+            }
+        },
+        methods: {
+            addTodo(){
+                if (this.newTodo) {
+                    this.list.push(
+                            {
+                                title: this.newTodo,
+                                checked: false
+                            }
+                    );
+                    this.newTodo = '';
+                }
+            },
+            removeTodo(todo){
+                var index = this.list.indexOf(todo);
+                this.list.splice(index, 1);
+            },
+            editorTodo(todo){
+                //将修改前的数据保存到beforeTodo中，以便后面的取消操作
+                this.beforeTodo = todo.title;
+
+                this.editedTodo = todo;
+            },
+            doneTodo(todo){
+                if (!this.editedTodo) {
+                    return;
+                }
+                this.editedTodo = null;
+                todo.title = todo.title.trim();
+                if (!todo.title) {
+                    this.removeTodo(todo);
+                }
+            },
+            cancelTodo(todo){  //撤销编辑操作
+                todo.title = this.beforeTodo;
+                this.editedTodo = null;
+            },
+            clearComplete(){
+                this.list = filter.active(this.list);
+            }
+
+        },
+        directives: {  //自定义指令
+            focus: {
+                update: function (el, binding) {  //钩子函数
+                    if (binding.value) {
+                        el.focus();  //input自动获取焦点
+                    }
+
+                }
+            }
+        }
+    });
+    /*通过hash来控制完成状态的切换
+     hashchange事件：当hash值改变的时候触发事件
+     */
+    function onHashChange() {
+        //console.log(window.location.hash);
+        var visibility = window.location.hash.replace(/#\/?/, '');
+        app.visibility = visibility;
+    }
+    onHashChange();
+    window.addEventListener('hashchange', onHashChange)
+</script>
+</body>
+
+</html>

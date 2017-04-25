@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>过滤器</title>
+    <script src="vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <p>{{message | reverse | uppercase}}</p>
+</div>
+<script>
+    Vue.filter('uppercase', function (value) {
+        if (!value) return;
+        value = value.toString();
+        return value.charAt(0).toUpperCase()+value.slice(1);
+    });
+    Vue.filter('reverse', function (value) {
+        return value.split('').reverse().join('')
+    });
+    var app = new Vue({
+        el: '#app',
+        data: {
+            message: 'hello'
+        }
+    });
+    /* var value='hello';
+     //var value=str.toString();
+     console.log(value.charAt(0).toUpperCase()+value.slice(1));*/
+
+</script>
+</body>
+</html>

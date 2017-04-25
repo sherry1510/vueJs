@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>html模板</title>
+    <script src="todo/vue.js"></script>
+</head>
+<body>
+<div id="app" v-bind:customer="abc">
+    <div v-html="html"></div>
+</div>
+<script>
+    let obj = {
+        html: '<div>hello!</div>',
+        abc: '1'
+    };
+    new Vue({
+        el: '#app',
+        data: obj
+    });
+
+</script>
+</body>
+</html>

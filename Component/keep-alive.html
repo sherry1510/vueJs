@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <button @click="tabComponent(1)">切换到第1个组件</button>
+    <button @click="tabComponent(2)">切换到第2个组件</button>
+    <button @click="tabComponent(3)">切换到第3个组件</button>
+    <!--如果把切换出去的组件保留在内存中，可以保留它的状态或避免重新渲染。为此可以添加一个 keep-alive 指令参数：-->
+    <keep-alive>
+        <componet :is="currentTem"></componet>
+    </keep-alive>
+</div>
+<script>
+    /*
+     动态组件：默认显示某个组件，满足某个条件下再显示另一个组件
+     * */
+    var custome1 = Vue.component('custome1', {
+        template: `<div @click="changeBg">我是第1个组件</div>`,
+        methods: {
+            changeBg(ev){
+                ev.target.style.background = 'red';
+            }
+        }
+    });
+    var custome2 = Vue.component('custome2', {
+        template: `<div>我是第2个组件</div>`
+    });
+    var custome3 = Vue.component('custome3', {
+        template: `<div>我是第3个组件</div>`
+    });
+    new Vue({
+        el: '#app',
+        data: {
+            currentTem: custome1
+        },
+        methods: {
+            tabComponent(index){
+                if (index === 1) {
+                    this.currentTem = custome1;
+                } else if (index === 2) {
+                    this.currentTem = custome2;
+                } else if (index === 3) {
+                    this.currentTem = custome3;
+                }
+            }
+        }
+    })
+</script>
+</body>
+</html>

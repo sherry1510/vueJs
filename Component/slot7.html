@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <customer>
+        <!--渲染的数据是父组件中的数据-->
+        {{message}}
+    </customer>
+</div>
+<script>
+    /*
+     * 使用slot分发内容，编译作用域
+     * */
+    Vue.component('customer', {
+        data: function () {
+            return {
+                message: '我是子组件的数据'
+            }
+        },
+        template: `
+            <div>
+                {{message}}
+                <p>我是第1个提醒</p>
+                <slot></slot>
+            </div>
+        `
+    });
+    new Vue({
+        el: '#app',
+        data:{
+            message: '我是父组件的数据'
+        }
+    })
+</script>
+</body>
+</html>
